@@ -72,6 +72,8 @@
                         <th>Name</th>
                         <th>Team Responsible</th>
                         <th>Status</th>
+                        <th>Food Cost</th>
+                        <th>Other Cost</th>
                         <th>Total Cost</th>
                         <th>Remaining Budget</th>
                         <th>Actions</th>
@@ -89,6 +91,8 @@
                             </span>
                         </td>
                         <td>₹{{ number_format($ngo->total_cost, 2) }}</td>
+                        <td>₹{{ number_format($ngo->other_costs, 2) }}</td>
+                        <td>₹{{ number_format(($ngo->total_cost + $ngo->other_costs), 2) }}</td>
                         <td>₹{{ number_format($ngo->remaining_budget, 2) }}</td>
                         <td>
                             <a href="{{ route('ngos.edit', $ngo->id) }}" class="btn btn-sm btn-warning">

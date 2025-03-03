@@ -65,10 +65,10 @@
                     <input type="file" name="bill_files[]" class="form-control" accept="application/pdf" multiple>
                 </div>
 
-                <div class="mb-3">
+                {{-- <div class="mb-3">
                     <label class="form-label">Remaining Budget</label>
                     <input type="number" step="0.01" name="remaining_budget" class="form-control" required>
-                </div>
+                </div> --}}
 
                 <div class="mb-3">
                     <label class="form-label">Remarks/Notes</label>
