@@ -166,11 +166,26 @@ class NGOController extends Controller
         return redirect()->route('ngos.index')->with('success', 'NGO updated successfully!');
     }
 
-
     public function destroy(NGO $ngo)
     {
+        // Get initial fund
+        $initialFund = config('ngo.initial_fund');
+
+        // Delete the NGO
         $ngo->delete();
 
-        return redirect()->route('ngos.index')->with('success', 'NGO deleted successfully!');
+        // Fetch all remaining NGOs in order of creation
+        $ngos = NGO::orderBy('created_at', 'asc')->get();
+
+        // Recalculate remaining budget
+        $remainingBudget = $initialFund;
+        foreach ($ngos as $n) {
+            $remainingBudget -= ($n->total_cost + $n->other_costs);
+            $n->remaining_budget = $remainingBudget;
+            $n->save();
+        }
+
+        return redirect()->route('ngos.index')->with('success', 'NGO deleted successfully, and remaining budget recalculated.');
     }
+
 }
