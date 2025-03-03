@@ -40,16 +40,22 @@ class NGOController extends Controller
             'cost_per_unit' => 'required|numeric',
             'total_cost' => 'required|numeric',
             'payment_mode' => 'required',
-            'remaining_budget' => 'required|numeric',
         ]);
 
-        // Calculate total cost
+        // Get Initial Fund from Config
+        $initialFund = config('ngo.initial_fund');
+
+        // Calculate total cost including other costs
         $totalCost = $request->total_cost + ($request->other_costs ?? 0);
 
-        // Get the latest remaining budget
-        $lastNgo = NGO::orderBy('created_at', direction: 'desc')->first();
-        $remainingBudget = $lastNgo ? $lastNgo->remaining_budget - ($totalCost) : config('ngo.initial_fund') - $totalCost;
+        // Get the last NGO's remaining budget
+        $lastNgo = NGO::orderBy('created_at', 'desc')->first();
+        $previousRemainingBudget = $lastNgo ? $lastNgo->remaining_budget : $initialFund;
 
+        // Calculate new remaining budget
+        $remainingBudget = $previousRemainingBudget - $totalCost;
+
+        // Create new NGO record
         $ngo = NGO::create([
             'name' => $request->name,
             'team_responsible' => $request->team_responsible,
@@ -64,20 +70,6 @@ class NGOController extends Controller
             'status' => 'pending',
             'approved_by' => json_encode([]),
         ]);
-
-        // Handle multiple bill uploads
-        if ($request->hasFile('bill_files')) {
-            foreach ($request->file('bill_files') as $file) {
-                $billPath = $file->store('bills', 'public');
-
-                Bill::create([
-                    'ngo_id' => $ngo->id,
-                    'bill_number' => 'BILL-' . time() . rand(1000, 9999), // Generate unique bill number
-                    'bill_file' => $billPath,
-                    'amount' => 0, // Set amount field if needed
-                ]);
-            }
-        }
 
         return redirect()->route('ngos.index')->with('success', 'NGO created and pending approval.');
     }
@@ -113,27 +105,39 @@ class NGOController extends Controller
 
     public function update(Request $request, NGO $ngo)
     {
-        // Calculate new total cost
+        $request->validate([
+            'name' => 'required',
+            'team_responsible' => 'required',
+            'food_type' => 'required',
+            'quantity' => 'required|integer',
+            'cost_per_unit' => 'required|numeric',
+            'total_cost' => 'required|numeric',
+            'payment_mode' => 'required',
+        ]);
+
+        // Calculate total cost including other costs
         $totalCost = $request->total_cost + ($request->other_costs ?? 0);
 
         // Get initial fund
         $initialFund = config('ngo.initial_fund');
 
+        // Get all NGOs in ascending order to properly recalculate remaining budget
         $ngos = NGO::orderBy('created_at', 'asc')->get();
 
-        // Update NGO
+        // Update NGO data
         $ngo->update([
             'name' => $request->name,
             'team_responsible' => $request->team_responsible,
             'food_type' => $request->food_type,
             'quantity' => $request->quantity,
             'cost_per_unit' => $request->cost_per_unit,
-            'other_costs' => $request->other_costs,
+            'other_costs' => $request->other_costs ?? 0,
             'total_cost' => $request->total_cost,
             'payment_mode' => $request->payment_mode,
             'remarks' => $request->remarks,
         ]);
 
+        // Handle multiple bill uploads
         if ($request->hasFile('bill_files')) {
             foreach ($request->file('bill_files') as $file) {
                 $billPath = $file->store('bills', 'public');
@@ -151,16 +155,17 @@ class NGOController extends Controller
         $remainingBudget = $initialFund;
         foreach ($ngos as $n) {
             if ($n->id == $ngo->id) {
-                $n->total_cost = $request->other_costs;
+                $n->total_cost = $totalCost;
             }
 
-            $remainingBudget -= $n->total_cost;
+            $remainingBudget -= ($n->total_cost + $n->other_costs);
             $n->remaining_budget = $remainingBudget;
             $n->save();
         }
 
         return redirect()->route('ngos.index')->with('success', 'NGO updated successfully!');
     }
+
 
     public function destroy(NGO $ngo)
     {
