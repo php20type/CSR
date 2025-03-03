@@ -19,7 +19,7 @@ class AdminController extends Controller
         // Calculate remaining budget correctly
         $total_expenses = NGO::sum(DB::raw('total_cost + other_costs'));
         $remaining_budget = $initial_fund - $total_expenses;
-        $ngos = NGO::latest()->take(5)->get(); // Fetch recent NGOs
+        $ngos = NGO::latest()->take(10)->get(); // Fetch recent NGOs
 
         return view('admin.dashboard', compact('total_ngos', 'approved_ngos', 'pending_ngos', 'remaining_budget', 'ngos'));
     }
