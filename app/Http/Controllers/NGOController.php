@@ -155,7 +155,7 @@ class NGOController extends Controller
         $remainingBudget = $initialFund;
         foreach ($ngos as $n) {
             if ($n->id == $ngo->id) {
-                $n->total_cost = $totalCost;
+                $n->total_cost = $request->total_cost;
             }
 
             $remainingBudget -= ($n->total_cost + $n->other_costs);
@@ -165,6 +165,7 @@ class NGOController extends Controller
 
         return redirect()->route('ngos.index')->with('success', 'NGO updated successfully!');
     }
+
 
     public function destroy(NGO $ngo)
     {
