@@ -51,7 +51,7 @@
                         <select name="payment_mode" class="form-control" required>
                             <option value="cash" {{ $ngo->payment_mode == 'cash' ? 'selected' : '' }}>Cash</option>
                             <option value="bank_transfer" {{ $ngo->payment_mode == 'bank_transfer' ? 'selected' : '' }}>Bank Transfer</option>
-                            <option value="cheque" {{ $ngo->payment_mode == 'cheque' ? 'selected' : '' }}>Cheque</option>
+                            <option value="online" {{ $ngo->payment_mode == 'online' ? 'selected' : '' }}>Online</option>
                         </select>
                     </div>
 

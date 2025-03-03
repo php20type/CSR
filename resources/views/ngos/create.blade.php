@@ -44,9 +44,9 @@
                 <div class="mb-3">
                     <label class="form-label">Payment Mode</label>
                     <select name="payment_mode" class="form-control" required>
-                        <option value="Cash">Cash</option>
-                        <option value="Bank Transfer">Bank Transfer</option>
-                        <option value="Online Payment">Online Payment</option>
+                        <option value="cash">Cash</option>
+                        <option value="bank_transfer">Bank Transfer</option>
+                        <option value="online">Online</option>
                     </select>
                 </div>
                 
