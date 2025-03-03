@@ -27,5 +27,11 @@
                 <i class="fa fa-file-invoice-dollar"></i> Bills
             </a>
         </li>
+
+        <li class="nav-item">
+            <a class="nav-link text-white" href="{{ route('settings.index') }}">
+                <i class="fa fa-gear"></i> Settings
+            </a>
+        </li>
     </ul>
 </div>
