@@ -9,7 +9,7 @@ class BillController extends Controller
 {
     public function index()
     {
-        $bills = Bill::with('ngo')->get();
+        $bills = Bill::whereHas('ngo')->get(); // Fetch only bills with an NGO
         return view('bills.index', compact('bills'));
     }
 

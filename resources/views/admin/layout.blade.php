@@ -13,7 +13,7 @@
 
     <div class="container-fluid">
         <div class="row">
-            <div class="col-md-2">
+            <div class="col-md-2" style="padding-left: 0px;">
                 @include('admin.sidebar')
             </div>
             <div class="col-md-10">

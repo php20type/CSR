@@ -22,18 +22,16 @@ class SettingController extends Controller
             'initial_fund' => 'required|numeric|min:0'
         ]);
 
-        // Update the config file dynamically
-        $configPath = config_path('ngo.php');
-        $config = File::get($configPath);
-
-        // Replace the initial_fund value
-        $updatedConfig = preg_replace(
-            "/'initial_fund' => (\d+(\.\d+)?)/",
-            "'initial_fund' => " . $request->initial_fund,
-            $config
+        // Update the .env file dynamically
+        $envPath = base_path('.env');
+        $envContent = file_get_contents($envPath);
+        $newEnvContent = preg_replace(
+            "/NGO_INITIAL_FUND=.*/",
+            "NGO_INITIAL_FUND=" . $request->initial_fund,
+            $envContent
         );
 
-        File::put($configPath, $updatedConfig);
+        file_put_contents($envPath, $newEnvContent);
 
         // Clear config cache to apply changes
         Artisan::call('config:clear');

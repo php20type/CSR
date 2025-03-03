@@ -16,7 +16,7 @@
         @foreach($bills as $bill)
             <tr>
                 <td>{{ $bill->bill_number }}</td>
-                <td>{{ $bill->ngo->name }}</td>
+                <td>{{ $bill->ngo ? $bill->ngo->name : 'N/A' }}</td>
                 <td>${{ number_format($bill->amount, 2) }}</td>
                 <td>
                     @if($bill->bill_file)
