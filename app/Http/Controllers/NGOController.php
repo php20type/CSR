@@ -1,0 +1,171 @@
+<?php
+
+namespace App\Http\Controllers;
+
+use Illuminate\Http\Request;
+use App\Models\NGO;
+use App\Models\NGOApproval;
+use App\Models\User;
+use App\Models\Bill;
+use Illuminate\Support\Facades\Auth;
+
+class NGOController extends Controller
+{
+    public function index()
+    {
+        $ngos = NGO::with('approvals.admin')->get(); // Load approvals with admins
+        $admins = User::all();
+        $initialFund = config('ngo.initial_fund');
+        $remainingBudget = $initialFund;
+
+        foreach ($ngos as $ngo) {
+            $ngo->remaining_budget = $remainingBudget - ($ngo->total_cost + $ngo->other_costs);
+            $remainingBudget = $ngo->remaining_budget;
+        }
+        return view('ngos.index', compact('ngos', 'admins', 'initialFund', 'remainingBudget'));
+    }
+
+    public function create()
+    {
+        return view('ngos.create');
+    }
+
+    public function store(Request $request)
+    {
+        $request->validate([
+            'name' => 'required',
+            'team_responsible' => 'required',
+            'food_type' => 'required',
+            'quantity' => 'required|integer',
+            'cost_per_unit' => 'required|numeric',
+            'total_cost' => 'required|numeric',
+            'payment_mode' => 'required',
+            'remaining_budget' => 'required|numeric',
+        ]);
+
+        // Calculate total cost
+        $totalCost = $request->total_cost + ($request->other_costs ?? 0);
+
+        // Get the latest remaining budget
+        $lastNgo = NGO::orderBy('created_at', direction: 'desc')->first();
+        $remainingBudget = $lastNgo ? $lastNgo->remaining_budget - ($totalCost) : config('ngo.initial_fund') - $totalCost;
+
+        $ngo = NGO::create([
+            'name' => $request->name,
+            'team_responsible' => $request->team_responsible,
+            'food_type' => $request->food_type,
+            'quantity' => $request->quantity,
+            'cost_per_unit' => $request->cost_per_unit,
+            'other_costs' => $request->other_costs ?? 0,
+            'total_cost' => $request->total_cost,
+            'payment_mode' => $request->payment_mode,
+            'remaining_budget' => $remainingBudget,
+            'remarks' => $request->remarks,
+            'status' => 'pending',
+            'approved_by' => json_encode([]),
+        ]);
+
+        // Handle multiple bill uploads
+        if ($request->hasFile('bill_files')) {
+            foreach ($request->file('bill_files') as $file) {
+                $billPath = $file->store('bills', 'public');
+
+                Bill::create([
+                    'ngo_id' => $ngo->id,
+                    'bill_number' => 'BILL-' . time() . rand(1000, 9999), // Generate unique bill number
+                    'bill_file' => $billPath,
+                    'amount' => 0, // Set amount field if needed
+                ]);
+            }
+        }
+
+        return redirect()->route('ngos.index')->with('success', 'NGO created and pending approval.');
+    }
+
+    public function approve($id)
+    {
+        $ngo = NGO::findOrFail($id);
+        $adminId = Auth::id();
+
+        // Check if admin already approved
+        if (!NGOApproval::where('ngo_id', $id)->where('admin_id', $adminId)->exists()) {
+            NGOApproval::create(['ngo_id' => $id, 'admin_id' => $adminId]);
+        }
+
+        // If all 3 admins approved, update status to "Done"
+        if ($ngo->approvals()->count() >= 3) {
+            $ngo->update(['status' => 'Done']);
+        }
+
+        return back()->with('success', 'NGO approval updated.');
+    }
+
+    public function show($id)
+    {
+        $ngo = NGO::with('bills')->findOrFail($id);
+        return view('ngos.show', compact('ngo'));
+    }
+
+    public function edit(NGO $ngo)
+    {
+        return view('ngos.edit', compact('ngo'));
+    }
+
+    public function update(Request $request, NGO $ngo)
+    {
+        // Calculate new total cost
+        $totalCost = $request->total_cost + ($request->other_costs ?? 0);
+
+        // Get initial fund
+        $initialFund = config('ngo.initial_fund');
+
+        $ngos = NGO::orderBy('created_at', 'asc')->get();
+
+        // Update NGO
+        $ngo->update([
+            'name' => $request->name,
+            'team_responsible' => $request->team_responsible,
+            'food_type' => $request->food_type,
+            'quantity' => $request->quantity,
+            'cost_per_unit' => $request->cost_per_unit,
+            'other_costs' => $request->other_costs,
+            'total_cost' => $request->total_cost,
+            'payment_mode' => $request->payment_mode,
+            'remarks' => $request->remarks,
+        ]);
+
+        if ($request->hasFile('bill_files')) {
+            foreach ($request->file('bill_files') as $file) {
+                $billPath = $file->store('bills', 'public');
+
+                Bill::create([
+                    'ngo_id' => $ngo->id,
+                    'bill_number' => 'BILL-' . time() . rand(1000, 9999), // Generate unique bill number
+                    'bill_file' => $billPath,
+                    'amount' => 0, // Set amount field if needed
+                ]);
+            }
+        }
+
+        // Recalculate remaining budget for all NGOs
+        $remainingBudget = $initialFund;
+        foreach ($ngos as $n) {
+            if ($n->id == $ngo->id) {
+                $n->total_cost = $request->other_costs;
+            }
+
+            $remainingBudget -= $n->total_cost;
+            $n->remaining_budget = $remainingBudget;
+            $n->save();
+        }
+
+        return redirect()->route('ngos.index')->with('success', 'NGO updated successfully!');
+    }
+
+    public function destroy(NGO $ngo)
+    {
+        $ngo->delete();
+
+        return redirect()->route('ngos.index')->with('success', 'NGO deleted successfully!');
+    }
+}
