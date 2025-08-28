@@ -3,23 +3,25 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Models\Bill;
+use App\Models\NgoBill;
+use Illuminate\Support\Facades\Storage;
 
 class BillController extends Controller
 {
     public function index()
     {
-        $bills = Bill::whereHas('ngo')->get(); // Fetch only bills with an NGO
+        $bills = NgoBill::whereHas('ngo')->get(); // Fetch only bills with an NGO
         return view('bills.index', compact('bills'));
     }
 
     public function destroy($id)
     {
-        $bill = Bill::findOrFail($id);
+        $bill = NgoBill::findOrFail($id);
 
-        // Delete the file from storage
-        Storage::delete('public/' . $bill->bill_file);
-
+        // Delete the file from storage (if exists)
+        if ($bill->bill_file && Storage::disk('public')->exists($bill->bill_file)) {
+            Storage::disk('public')->delete($bill->bill_file);
+        }
         // Delete the record from the database
         $bill->delete();
 

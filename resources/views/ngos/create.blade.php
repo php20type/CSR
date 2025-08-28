@@ -62,7 +62,7 @@
 
                 <div class="col-md-12 mb-3">
                     <label class="form-label"><strong>Upload Bill Files (PDF only, multiple allowed)</strong></label>
-                    <input type="file" name="bill_files[]" class="form-control" accept="application/pdf" multiple>
+                    <input type="file" name="bill_files[]" class="form-control" accept="image/*,application/pdf,.doc,.docx"  multiple>
                 </div>
 
                 {{-- <div class="mb-3">

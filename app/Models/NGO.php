@@ -18,6 +18,6 @@ class NGO extends Model
 
     public function bills()
     {
-        return $this->hasMany(Bill::class, 'ngo_id');
+        return $this->hasMany(NgoBill::class, 'ngo_id');
     }
 }

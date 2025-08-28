@@ -6,7 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\NGO;
 use App\Models\NGOApproval;
 use App\Models\User;
-use App\Models\Bill;
+use App\Models\NgoBill;
 use Illuminate\Support\Facades\Auth;
 
 class NGOController extends Controller
@@ -40,6 +40,7 @@ class NGOController extends Controller
             'cost_per_unit' => 'required|numeric',
             'total_cost' => 'required|numeric',
             'payment_mode' => 'required',
+            'bill_files.*' => 'nullable|file|mimes:jpg,jpeg,png,pdf,doc,docx|max:2048',
         ]);
 
         // Get Initial Fund from Config
@@ -71,6 +72,22 @@ class NGOController extends Controller
             'approved_by' => json_encode([]),
         ]);
 
+        // Handle multiple bill uploads
+        if ($request->hasFile('bill_files')) {
+            foreach ($request->file('bill_files') as $file) {
+                $billPath = $file->store('bills', 'public');
+
+                NgoBill::create([
+                    'ngo_id' => $ngo->id,
+                    'user_id' => Auth::id(),
+                    'bill_number' => 'BILL-' . time() . rand(1000, 9999),
+                    'bill_file' => $billPath,
+                    'amount' => $request->total_cost, // or per file if needed
+                    'uploaded_by' => auth()->id(), // track who uploaded
+                ]);
+            }
+        }
+
         return redirect()->route('ngos.index')->with('success', 'NGO created and pending approval.');
     }
 
@@ -100,6 +117,7 @@ class NGOController extends Controller
 
     public function edit(NGO $ngo)
     {
+        $ngo->load('bills'); // eager load bills
         return view('ngos.edit', compact('ngo'));
     }
 
@@ -113,6 +131,7 @@ class NGOController extends Controller
             'cost_per_unit' => 'required|numeric',
             'total_cost' => 'required|numeric',
             'payment_mode' => 'required',
+            'bill_files.*' => 'nullable|file|mimes:jpg,jpeg,png,pdf,doc,docx|max:2048',
         ]);
 
         // Calculate total cost including other costs
@@ -142,11 +161,13 @@ class NGOController extends Controller
             foreach ($request->file('bill_files') as $file) {
                 $billPath = $file->store('bills', 'public');
 
-                Bill::create([
+                NgoBill::create([
                     'ngo_id' => $ngo->id,
-                    'bill_number' => 'BILL-' . time() . rand(1000, 9999), // Generate unique bill number
+                    'user_id' => Auth::id(),
+                    'bill_number' => 'BILL-' . time() . rand(1000, 9999),
                     'bill_file' => $billPath,
-                    'amount' => 0, // Set amount field if needed
+                    'amount' => $request->total_cost,
+                    'uploaded_by' => auth()->id(),
                 ]);
             }
         }

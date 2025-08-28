@@ -3,7 +3,8 @@
 namespace App\Http\Controllers;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Artisan;
-
+use App\Models\AdditionalFund;
+use Illuminate\Support\Facades\Auth;
 
 use Illuminate\Http\Request;
 
@@ -13,7 +14,9 @@ class SettingController extends Controller
     {
         // Fetch the current initial fund from config
         $initialFund = config('ngo.initial_fund');
-        return view('settings.index', compact('initialFund'));
+        $additionalFund = AdditionalFund::orderBy('release_date', 'desc')->get();
+        $totalFund = $initialFund + $additionalFund->sum('amount');
+        return view('settings.index', compact('initialFund', 'totalFund', 'additionalFund'));
     }
 
     public function updateInitialFund(Request $request)
@@ -37,5 +40,24 @@ class SettingController extends Controller
         Artisan::call('config:clear');
 
         return redirect()->route('settings.index')->with('success', 'Initial fund updated successfully!');
+    }
+
+    // Store new additional fund
+    public function store(Request $request)
+    {
+        $request->validate([
+            'amount' => 'required|numeric|min:1',
+            'release_date' => 'required|date',
+            'note' => 'nullable|string',
+        ]);
+
+        AdditionalFund::create([
+            'added_by' => Auth::id(),
+            'amount' => $request->amount,
+            'release_date' => $request->release_date,
+            'note' => $request->note,
+        ]);
+
+        return redirect()->back()->with('success', 'Additional Fund added successfully.');
     }
 }
