@@ -101,9 +101,9 @@ class NGOController extends Controller
             NGOApproval::create(['ngo_id' => $id, 'admin_id' => $adminId]);
         }
 
-        // If all 3 admins approved, update status to "Done"
+        // If all 3 admins approved, update status to "approved"
         if ($ngo->approvals()->count() >= 3) {
-            $ngo->update(['status' => 'Done']);
+            $ngo->update(['status' => 'approved']);
         }
 
         return back()->with('success', 'NGO approval updated.');

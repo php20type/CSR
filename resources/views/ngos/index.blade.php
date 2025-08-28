@@ -82,12 +82,12 @@
                             @endforeach
                         </td>
                         <td>
-                            <span class="badge bg-{{ $ngo->status == 'Done' ? 'success' : 'warning' }}">
+                            <span class="badge bg-{{ $ngo->status === 'approved' ? 'success' : 'warning' }}">
                                 {{ ucfirst($ngo->status) }}
                             </span>
                         </td>
                         <td>
-                            @if($ngo->status != 'Done' && !$ngo->approvals->contains('admin_id', auth()->id()))
+                            @if($ngo->status != 'approved' && !$ngo->approvals->contains('admin_id', auth()->id()))
                                 <form action="{{ route('ngos.approve', $ngo->id) }}" method="POST" class="d-inline">
                                     @csrf
                                     <button type="submit" class="btn btn-sm btn-success">Approve</button>
