@@ -15,7 +15,7 @@ class NgoBill extends Model
 
     public function ngo()
     {
-        return $this->belongsTo(Ngo::class, 'ngo_id');
+        return $this->belongsTo(NGO::class, 'ngo_id');
     }
     public function user()
     {
