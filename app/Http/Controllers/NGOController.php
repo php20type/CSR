@@ -13,7 +13,7 @@ class NGOController extends Controller
 {
     public function index()
     {
-        $ngos = NGO::with('approvals.admin')->orderBy('id', 'desc')->get(); // Load approvals with admins
+        $ngos = NGO::with('approvals.admin')->get(); // Load approvals with admins
         $admins = User::all();
         $initialFund = config('ngo.initial_fund');
         $remainingBudget = $initialFund;
