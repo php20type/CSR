@@ -9,7 +9,7 @@ class NGO extends Model
 {
     use HasFactory;
     protected $table = 'ngos';
-    protected $fillable = ['location', 'name', 'team_responsible', 'food_type', 'quantity', 'cost_per_unit', 'other_costs', 'total_cost', 'payment_mode', 'remaining_budget', 'remarks'];
+    protected $fillable = ['location', 'name', 'team_responsible', 'food_type', 'quantity', 'cost_per_unit', 'other_costs', 'total_cost', 'payment_mode', 'remaining_budget', 'remarks', 'released_by'];
 
     public function approvals()
     {
@@ -19,5 +19,9 @@ class NGO extends Model
     public function bills()
     {
         return $this->hasMany(NgoBill::class, 'ngo_id');
+    }
+    public function releasedBy()
+    {
+        return $this->belongsTo(User::class, 'released_by');
     }
 }

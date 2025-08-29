@@ -46,8 +46,8 @@
                         <th>Name</th>
                         <th>Team Responsible</th>
                         <th>Food Type</th>
-                        {{-- <th>Food Cost</th>
-                        <th>Other Cost</th> --}}
+                        {{-- <th>Food Cost</th> --}}
+                        <th>Released By</th>
                         <th>Total Cost</th>
                         <th>Payment Mode</th>
                         <th>Remaining Budget</th>
@@ -62,6 +62,7 @@
                         <td>{{ $ngo->name }}</td>
                         <td>{{ $ngo->team_responsible }}</td>
                         <td>{{ $ngo->food_type }}</td>
+                        <td>{{ $ngo->releasedBy ? $ngo->releasedBy->name : 'Not Released Yet' }}</td>
                         {{-- <td>₹{{ number_format($ngo->total_cost, 2) }}</td>
                         <td>₹{{ number_format($ngo->other_costs, 2) }}</td> --}}
                         <td>₹{{ number_format($ngo->other_costs + $ngo->total_cost, 2) }}</td>

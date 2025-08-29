@@ -27,7 +27,8 @@ class NGOController extends Controller
 
     public function create()
     {
-        return view('ngos.create');
+        $users = User::all(); // all users for dropdown
+        return view('ngos.create', compact('users'));
     }
 
     public function store(Request $request)
@@ -41,6 +42,7 @@ class NGOController extends Controller
             'total_cost' => 'required|numeric',
             'payment_mode' => 'required',
             'bill_files.*' => 'nullable|file|mimes:jpg,jpeg,png,pdf,doc,docx|max:2048',
+            'released_by' => 'nullable|exists:users,id',
         ]);
 
         // Get Initial Fund from Config
@@ -67,6 +69,7 @@ class NGOController extends Controller
             'total_cost' => $request->total_cost,
             'payment_mode' => $request->payment_mode,
             'remaining_budget' => $remainingBudget,
+            'released_by' => $request->released_by,
             'remarks' => $request->remarks,
             'status' => 'pending',
             'approved_by' => json_encode([]),
@@ -118,7 +121,8 @@ class NGOController extends Controller
     public function edit(NGO $ngo)
     {
         $ngo->load('bills'); // eager load bills
-        return view('ngos.edit', compact('ngo'));
+        $users = User::all(); // all users for dropdown
+        return view('ngos.edit', compact('ngo', 'users'));
     }
 
     public function update(Request $request, NGO $ngo)
@@ -132,6 +136,7 @@ class NGOController extends Controller
             'total_cost' => 'required|numeric',
             'payment_mode' => 'required',
             'bill_files.*' => 'nullable|file|mimes:jpg,jpeg,png,pdf,doc,docx|max:2048',
+            'released_by' => 'nullable|exists:users,id',
         ]);
 
         // Calculate total cost including other costs
@@ -153,6 +158,7 @@ class NGOController extends Controller
             'other_costs' => $request->other_costs ?? 0,
             'total_cost' => $request->total_cost,
             'payment_mode' => $request->payment_mode,
+            'released_by' => $request->released_by,
             'remarks' => $request->remarks,
         ]);
 

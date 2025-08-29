@@ -22,7 +22,7 @@
         <a class="navbar-brand" href="#">NGO Finance</a>
         <div>
             <a href="{{ route('login') }}" class="btn btn-primary">Login</a>
-            <a href="{{ route('register') }}" class="btn btn-success">Register</a>
+            {{-- <a href="{{ route('register') }}" class="btn btn-success">Register</a> --}}
         </div>
     </nav>
 

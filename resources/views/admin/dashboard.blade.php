@@ -75,6 +75,7 @@
                         <th>Food Cost</th>
                         <th>Other Cost</th>
                         <th>Total Cost</th>
+                        <th>Released By</th>
                         <th>Remaining Budget</th>
                         <th>Actions</th>
                     </tr>
@@ -93,6 +94,7 @@
                         <td>₹{{ number_format($ngo->total_cost, 2) }}</td>
                         <td>₹{{ number_format($ngo->other_costs, 2) }}</td>
                         <td>₹{{ number_format(($ngo->total_cost + $ngo->other_costs), 2) }}</td>
+                        <td>{{ $ngo->releasedBy ? $ngo->releasedBy->name : 'Not Released Yet' }}</td>
                         <td>₹{{ number_format($ngo->remaining_budget, 2) }}</td>
                         <td>
                             <a href="{{ route('ngos.edit', $ngo->id) }}" class="btn btn-sm btn-warning">

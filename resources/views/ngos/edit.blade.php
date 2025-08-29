@@ -54,6 +54,18 @@
                             <option value="online" {{ $ngo->payment_mode == 'online' ? 'selected' : '' }}>Online</option>
                         </select>
                     </div>
+                    
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label"><strong>Released By</strong></label>
+                        <select name="released_by" class="form-control">
+                            <option value="">-- Select User --</option>
+                            @foreach($users as $user)
+                                <option value="{{ $user->id }}" {{ $ngo->released_by == $user->id ? 'selected' : '' }}>
+                                    {{ $user->name }}
+                                </option>
+                            @endforeach
+                        </select>
+                    </div>
 
                     <div class="col-md-12 mb-3">
                         <label class="form-label"><strong>Remarks</strong></label>

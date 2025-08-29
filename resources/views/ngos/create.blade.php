@@ -69,6 +69,18 @@
                     <label class="form-label">Remaining Budget</label>
                     <input type="number" step="0.01" name="remaining_budget" class="form-control" required>
                 </div> --}}
+                
+                <div class="mb-3">
+                    <label class="form-label"><strong>Released By</strong></label>
+                    <select name="released_by" class="form-control">
+                        <option value="">-- Select User --</option>
+                        @foreach($users as $user)
+                            <option value="{{ $user->id }}">
+                                {{ $user->name }}
+                            </option>
+                        @endforeach
+                    </select>
+                </div>
 
                 <div class="mb-3">
                     <label class="form-label">Remarks/Notes</label>
