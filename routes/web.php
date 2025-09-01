@@ -41,5 +41,8 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/settings', [SettingController::class, 'index'])->name('settings.index');
     Route::post('/fund/store', [SettingController::class, 'store'])->name('fund.store');
     Route::post('/settings/update-initial-fund', [SettingController::class, 'updateInitialFund'])->name('settings.updateInitialFund');
+
+    Route::get('/send-test-mail', [SettingController::class, 'sendTestMail']);
+
 });
 

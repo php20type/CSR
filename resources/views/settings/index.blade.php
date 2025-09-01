@@ -93,4 +93,7 @@
         </form>
     </div>
 </div>
+<form action="{{ url('/send-test-mail') }}" method="GET">
+    <button type="submit">Send Test Mail</button>
+</form>
 @endsection

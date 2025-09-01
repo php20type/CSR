@@ -105,7 +105,7 @@ class NGOController extends Controller
         }
 
         // If all 3 admins approved, update status to "approved"
-        if ($ngo->approvals()->count() >= 3) {
+        if ($ngo->approvals()->count() = 2) {
             $ngo->update(['status' => 'approved']);
         }
 

@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Artisan;
 use App\Models\AdditionalFund;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Mail;
 
 use Illuminate\Http\Request;
 
@@ -59,5 +60,13 @@ class SettingController extends Controller
         ]);
 
         return redirect()->back()->with('success', 'Additional Fund added successfully.');
+    }
+
+    public function sendTestMail()
+    {
+        Mail::send('emails.test', ['name' => 'Gmail'], function ($message) {
+            $message->to('crazycoder09@gmail.com')
+                ->subject('Test Mail with View');
+        });
     }
 }
