@@ -3,64 +3,69 @@
 @section('content')
 <div class="container-fluid">
     <div class="row mt-3">
-        <div class="col-md-3">
-            <div class="card text-white bg-danger">
-                <div class="card-body">
-                    <h5 class="card-title"><i class="fa fa-wallet"></i> Initial Fund</h5>
-                    <h3>₹{{ number_format($initialFund, 2) }}</h3>
+        <div class="row mt-3">
+            <!-- First 4 Cards (Funds) -->
+            <div class="col-md-3">
+                <div class="card text-white bg-primary">
+                    <div class="card-body">
+                        <h5 class="card-title"><i class="fa fa-wallet"></i> Initial Fund</h5>
+                        <h3>₹{{ number_format($initialFund, 2) }}</h3>
+                    </div>
                 </div>
             </div>
-        </div>
 
-        <div class="col-md-3">
-            <div class="card text-white bg-danger">
-                <div class="card-body">
-                    <h5 class="card-title"><i class="fa fa-wallet"></i> Additional Fund</h5>
-                    <h3>₹{{ number_format($additionalFunds, 2) }}</h3>
+            <div class="col-md-3">
+                <div class="card text-white bg-success">
+                    <div class="card-body">
+                        <h5 class="card-title"><i class="fa fa-plus-circle"></i> Additional Fund</h5>
+                        <h3>₹{{ number_format($additionalFunds, 2) }}</h3>
+                    </div>
                 </div>
             </div>
-        </div>
 
-        <div class="col-md-3">
-            <div class="card text-white bg-danger">
-                <div class="card-body">
-                    <h5 class="card-title"><i class="fa fa-wallet"></i> Total Fund</h5>
-                    <h3>₹{{ number_format(($initialFund + $additionalFunds), 2) }}</h3>
+            <div class="col-md-3">
+                <div class="card text-white bg-info">
+                    <div class="card-body">
+                        <h5 class="card-title"><i class="fa fa-coins"></i> Total Fund</h5>
+                        <h3>₹{{ number_format(($initialFund + $additionalFunds), 2) }}</h3>
+                    </div>
                 </div>
             </div>
-        </div>
 
-        <div class="col-md-3">
-            <div class="card text-white bg-danger">
-                <div class="card-body">
-                    <h5 class="card-title"><i class="fa fa-wallet"></i> Remaining Fund</h5>
-                    <h3>₹{{ number_format($remainingFund, 2) }}</h3>
+            <div class="col-md-3">
+                <div class="card text-white bg-warning">
+                    <div class="card-body">
+                        <h5 class="card-title"><i class="fa fa-piggy-bank"></i> Remaining Fund</h5>
+                        <h3>₹{{ number_format($remainingFund, 2) }}</h3>
+                    </div>
                 </div>
             </div>
-        </div>
-        <div class="col-md-3">
-            <div class="card text-white bg-primary">
-                <div class="card-body">
-                    <h5 class="card-title"><i class="fa fa-building"></i> Total NGOs</h5>
-                    <h3>{{ $total_ngos }}</h3>
-                </div>
-            </div>
-        </div>
 
-        <div class="col-md-3">
-            <div class="card text-white bg-success">
-                <div class="card-body">
-                    <h5 class="card-title"><i class="fa fa-check-circle"></i> Approved NGOs</h5>
-                    <h3>{{ $approved_ngos }}</h3>
+            <!-- Next 3 Cards (NGOs) -->
+            <div class="col-md-4 mt-3">
+                <div class="card text-white bg-dark">
+                    <div class="card-body">
+                        <h5 class="card-title"><i class="fa fa-building"></i> Total NGOs</h5>
+                        <h3>{{ $total_ngos }}</h3>
+                    </div>
                 </div>
             </div>
-        </div>
 
-        <div class="col-md-3">
-            <div class="card text-white bg-warning">
-                <div class="card-body">
-                    <h5 class="card-title"><i class="fa fa-clock"></i> Pending NGOs</h5>
-                    <h3>{{ $pending_ngos }}</h3>
+            <div class="col-md-4 mt-3">
+                <div class="card text-white bg-secondary">
+                    <div class="card-body">
+                        <h5 class="card-title"><i class="fa fa-check-circle"></i> Approved NGOs</h5>
+                        <h3>{{ $approved_ngos }}</h3>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-4 mt-3">
+                <div class="card text-white bg-danger">
+                    <div class="card-body">
+                        <h5 class="card-title"><i class="fa fa-clock"></i> Pending NGOs</h5>
+                        <h3>{{ $pending_ngos }}</h3>
+                    </div>
                 </div>
             </div>
         </div>
