@@ -62,6 +62,26 @@ class SettingController extends Controller
         return redirect()->back()->with('success', 'Additional Fund added successfully.');
     }
 
+    public function update(Request $request, $id)
+    {
+        $fund = AdditionalFund::findOrFail($id);
+        $fund->update([
+            'amount' => $request->amount,
+            'release_date' => $request->release_date,
+        ]);
+
+        return redirect()->back()->with('success', 'Additional Fund updated successfully.');
+    }
+
+    // Delete fund
+    public function destroy($id)
+    {
+        $fund = AdditionalFund::findOrFail($id);
+        $fund->delete();
+
+        return redirect()->back()->with('success', 'Additional Fund deleted successfully.');
+    }
+
     public function sendTestMail()
     {
         Mail::send('emails.test', ['name' => 'Gmail'], function ($message) {

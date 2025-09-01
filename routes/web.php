@@ -42,6 +42,9 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/fund/store', [SettingController::class, 'store'])->name('fund.store');
     Route::post('/settings/update-initial-fund', [SettingController::class, 'updateInitialFund'])->name('settings.updateInitialFund');
 
+    Route::put('/fund/{id}', [SettingController::class, 'update'])->name('fund.update');
+    Route::delete('/fund/{id}', [SettingController::class, 'destroy'])->name('fund.destroy');
+
     Route::get('/send-test-mail', [SettingController::class, 'sendTestMail']);
 
 });
