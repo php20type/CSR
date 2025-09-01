@@ -4,6 +4,41 @@
 <div class="container-fluid">
     <div class="row mt-3">
         <div class="col-md-3">
+            <div class="card text-white bg-danger">
+                <div class="card-body">
+                    <h5 class="card-title"><i class="fa fa-wallet"></i> Initial Fund</h5>
+                    <h3>₹{{ number_format($initialFund, 2) }}</h3>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-3">
+            <div class="card text-white bg-danger">
+                <div class="card-body">
+                    <h5 class="card-title"><i class="fa fa-wallet"></i> Additional Fund</h5>
+                    <h3>₹{{ number_format($additionalFunds, 2) }}</h3>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-3">
+            <div class="card text-white bg-danger">
+                <div class="card-body">
+                    <h5 class="card-title"><i class="fa fa-wallet"></i> Total Fund</h5>
+                    <h3>₹{{ number_format(($initialFund + $additionalFunds), 2) }}</h3>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-3">
+            <div class="card text-white bg-danger">
+                <div class="card-body">
+                    <h5 class="card-title"><i class="fa fa-wallet"></i> Remaining Fund</h5>
+                    <h3>₹{{ number_format($remainingFund, 2) }}</h3>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
             <div class="card text-white bg-primary">
                 <div class="card-body">
                     <h5 class="card-title"><i class="fa fa-building"></i> Total NGOs</h5>
@@ -29,16 +64,8 @@
                 </div>
             </div>
         </div>
-
-        <div class="col-md-3">
-            <div class="card text-white bg-danger">
-                <div class="card-body">
-                    <h5 class="card-title"><i class="fa fa-wallet"></i> Remaining Funds</h5>
-                    <h3>₹{{ number_format($remaining_budget, 2) }}</h3>
-                </div>
-            </div>
-        </div>
     </div>
+    
 
     <!-- Quick Actions -->
     <div class="row mt-4">
@@ -76,7 +103,7 @@
                         <th>Other Cost</th>
                         <th>Total Cost</th>
                         <th>Released By</th>
-                        <th>Remaining Budget</th>
+                        <th>Remaining Fund</th>
                         <th>Actions</th>
                     </tr>
                 </thead>

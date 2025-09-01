@@ -7,22 +7,33 @@ use App\Models\NGO;
 use App\Models\NGOApproval;
 use App\Models\User;
 use App\Models\NgoBill;
+use App\Models\AdditionalFund;
 use Illuminate\Support\Facades\Auth;
 
 class NGOController extends Controller
 {
     public function index()
     {
-        $ngos = NGO::with('approvals.admin')->get(); // Load approvals with admins
+        $ngos = NGO::with('approvals.admin')->orderBy('created_at', 'asc')->get(); // Load approvals with admins
         $admins = User::all();
         $initialFund = config('ngo.initial_fund');
+
+        // Sum all additional funds from DB
+        $additionalFunds = AdditionalFund::sum('amount');
+
         $remainingBudget = $initialFund;
+        $totalBudget = $initialFund + $additionalFunds;
+
+
+        if ($additionalFunds) {
+            $remainingBudget = $initialFund + $additionalFunds;
+        }
 
         foreach ($ngos as $ngo) {
             $ngo->remaining_budget = $remainingBudget - ($ngo->total_cost + $ngo->other_costs);
             $remainingBudget = $ngo->remaining_budget;
         }
-        return view('ngos.index', compact('ngos', 'admins', 'initialFund', 'remainingBudget'));
+        return view('ngos.index', compact('ngos', 'admins', 'initialFund', 'remainingBudget', 'totalBudget'));
     }
 
     public function create()

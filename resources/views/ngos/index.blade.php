@@ -31,7 +31,7 @@
 <div class="container">
     <div class="d-flex justify-content-between align-items-center mb-3">
         <h2>NGOs Fund Management</h2>
-        <p><strong>Initial Fund:</strong> ₹{{ number_format($initialFund, 2) }}</p>
+        <p><strong>Total Fund:</strong> ₹{{ number_format($totalBudget, 2) }}</p>
         <p><strong>Remaining Fund:</strong> ₹{{ number_format($remainingBudget, 2) }}</p>
         <a href="{{ route('ngos.create') }}" class="btn btn-primary">
             <i class="fas fa-plus"></i> Add NGO
