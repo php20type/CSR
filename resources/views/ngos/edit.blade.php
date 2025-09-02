@@ -95,7 +95,12 @@
                     <ul class="list-group">
                         @foreach($ngo->bills as $bill)
                             <li class="list-group-item d-flex justify-content-between align-items-center">
-                                <a href="{{ asset('storage/' . $bill->bill_file) }}" target="_blank">{{ $bill->bill_number }}</a>
+                                <button class="btn btn-link p-0 preview-btn" 
+                                        data-file="{{ asset('storage/' . $bill->bill_file) }}" 
+                                        data-bs-toggle="modal" 
+                                        data-bs-target="#billPreviewModal">
+                                    {{ $bill->bill_number }}
+                                </button>
                                 <form action="{{ route('bills.delete', $bill->id) }}" method="POST" class="d-inline">
                                     @csrf
                                     @method('DELETE')
@@ -106,7 +111,31 @@
                     </ul>
                 </div>
             @endif
+            <!-- Modal -->
+            <div class="modal fade" id="billPreviewModal" tabindex="-1" aria-hidden="true">
+                <div class="modal-dialog modal-xl">
+                    <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Bill Preview</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                    </div>
+                    <div class="modal-body">
+                        <iframe id="billPreviewFrame" src="" width="100%" height="600px" style="border:1px solid #ccc;"></iframe>
+                    </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 </div>
+@endsection
+@section('js')
+<script>
+    document.querySelectorAll('.preview-btn').forEach(btn => {
+        btn.addEventListener('click', function() {
+            let file = this.getAttribute('data-file');
+            document.getElementById('billPreviewFrame').src = file;
+        });
+    });
+</script>
 @endsection

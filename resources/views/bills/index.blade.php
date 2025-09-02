@@ -31,9 +31,12 @@
                         <td>${{ number_format($bill->amount, 2) }}</td>
                         <td>
                             @if($bill->bill_file)
-                                <a href="{{ asset('storage/' . $bill->bill_file) }}" target="_blank" class="btn btn-sm btn-info">
-                                    View
-                                </a>
+                                <button type="button" class="btn btn-sm btn-info" 
+                                    data-bs-toggle="modal" 
+                                    data-bs-target="#previewModal" 
+                                    data-file="{{ asset('storage/' . $bill->bill_file) }}">
+                                    Preview
+                                </button>
                             @else
                                 <span class="text-muted">No File</span>
                             @endif
@@ -51,5 +54,37 @@
             </tbody>
         </table>
     @endif
+    <!-- Modal -->
+    <div class="modal fade" id="previewModal" tabindex="-1" aria-labelledby="previewModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="previewModalLabel">File Preview</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body text-center">
+                <iframe id="filePreview" src="" width="100%" height="500px" style="border:none;"></iframe>
+            </div>
+            </div>
+        </div>
+    </div>
 </div>
+@endsection
+@section('js')
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        var previewModal = document.getElementById('previewModal');
+        var filePreview = document.getElementById('filePreview');
+
+        previewModal.addEventListener('show.bs.modal', function (event) {
+            var button = event.relatedTarget;
+            var fileUrl = button.getAttribute('data-file');
+            filePreview.src = fileUrl;
+        });
+
+        previewModal.addEventListener('hidden.bs.modal', function () {
+            filePreview.src = ""; // clear preview on close
+        });
+    });
+</script>
 @endsection
