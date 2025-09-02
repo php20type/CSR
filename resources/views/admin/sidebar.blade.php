@@ -21,6 +21,12 @@
             </a>
         </li>
 
+        <li class="nav-item">
+            <a href="{{ route(name: 'fund.requests.index') }}" class="nav-link text-white">
+                <i class="fas fa-hand-holding-heart"></i> NGO Requests
+            </a>
+        </li>
+
         <!-- Show Bills -->
         <li class="nav-item">
             <a class="nav-link text-white" href="{{ route('bills.index') }}">

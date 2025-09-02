@@ -22,6 +22,7 @@
         <a class="navbar-brand" href="#">NGO Finance</a>
         <div>
             <a href="{{ route('login') }}" class="btn btn-primary">Login</a>
+            <a href="{{ route('fund-request.form') }}" class="btn btn-primary">Fund Request Form</a>
             {{-- <a href="{{ route('register') }}" class="btn btn-success">Register</a> --}}
         </div>
     </nav>
@@ -30,7 +31,7 @@
     <div id="carouselExample" class="carousel slide" data-bs-ride="carousel">
         <div class="carousel-inner">
             <div class="carousel-item active">
-                <img src="{{ asset('images/slider1.png') }}" class="d-block w-100" alt="NGO 1">
+                <img src="{{ asset('images/slider1.jpg') }}" class="d-block w-100" alt="NGO 1">
             </div>
         </div>
         <button class="carousel-control-prev" type="button" data-bs-target="#carouselExample" data-bs-slide="prev">

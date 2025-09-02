@@ -6,6 +6,8 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\NGOController;
 use App\Http\Controllers\BillController;
 use App\Http\Controllers\SettingController;
+use App\Http\Controllers\NgoRequestController;
+
 
 Route::get('/', function () {
     return view('home');
@@ -46,6 +48,8 @@ Route::middleware(['auth'])->group(function () {
     Route::delete('/fund/{id}', [SettingController::class, 'destroy'])->name('fund.destroy');
 
     Route::get('/send-test-mail', [SettingController::class, 'sendTestMail']);
+    Route::get('/admin/ngo-requests', [NgoRequestController::class, 'showFundRequest'])->name('fund.requests.index');
 
 });
-
+Route::get('/fund-request', [NgoRequestController::class, 'create'])->name('fund-request.form');
+Route::post('/fund-request-post', [NgoRequestController::class, 'store'])->name('fund-request.store');
