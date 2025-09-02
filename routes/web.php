@@ -30,7 +30,7 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/ngos/create', [NGOController::class, 'create'])->name('ngos.create');
     Route::post('/ngos/store', [NGOController::class, 'store'])->name('ngos.store');
     Route::get('/ngos/{ngo}/edit', [NGOController::class, 'edit'])->name('ngos.edit');
-    Route::put('/ngos/{ngo}/update', [NGOController::class, 'update'])->name('ngos.update');
+    Route::post('/ngos/{ngo}/update', [NGOController::class, 'update'])->name('ngos.update');
     Route::delete('/ngos/{ngo}/delete', [NGOController::class, 'destroy'])->name('ngos.destroy');
     Route::post('/ngos/approve/{id}', [NGOController::class, 'approve'])->name('ngos.approve');
     Route::get('/ngos/{id}', [NGOController::class, 'show'])->name('ngos.show');

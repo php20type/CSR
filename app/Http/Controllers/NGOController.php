@@ -52,7 +52,7 @@ class NGOController extends Controller
             'cost_per_unit' => 'required|numeric',
             'total_cost' => 'required|numeric',
             'payment_mode' => 'required',
-            'bill_files.*' => 'nullable|file|mimes:jpg,jpeg,png,pdf,doc,docx|max:2048',
+            'bill_files.*' => 'nullable|file|mimes:jpg,jpeg,png,pdf,doc,docx|max:20480',
             'released_by' => 'nullable|exists:users,id',
         ]);
 
@@ -146,7 +146,7 @@ class NGOController extends Controller
             'cost_per_unit' => 'required|numeric',
             'total_cost' => 'required|numeric',
             'payment_mode' => 'required',
-            'bill_files.*' => 'nullable|file|mimes:jpg,jpeg,png,pdf,doc,docx|max:2048',
+            'bill_files.*' => 'nullable|file|mimes:jpg,jpeg,png,pdf,doc,docx|max:20480',
             'released_by' => 'nullable|exists:users,id',
         ]);
 

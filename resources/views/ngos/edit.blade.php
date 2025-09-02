@@ -8,7 +8,6 @@
         <div class="card-body">
             <form action="{{ route('ngos.update', $ngo->id) }}" method="POST" enctype="multipart/form-data">
                 @csrf
-                @method('PUT')
 
                 <div class="row">
                     <div class="col-md-6 mb-3">
@@ -74,8 +73,8 @@
 
                     <!-- Bill Upload -->
                     <div class="col-md-12 mb-3">
-                        <label class="form-label"><strong>Upload Bill Files (PDF only, multiple allowed)</strong></label>
-                        <input type="file" name="bill_files[]" class="form-control" accept="application/pdf" multiple>
+                        <label class="form-label"><strong>Upload Bill Files ( multiple allowed)</strong></label>
+                        <input type="file" name="bill_files[]" class="form-control" multiple>
                     </div>
 
                 </div>
