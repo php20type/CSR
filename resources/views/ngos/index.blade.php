@@ -43,6 +43,7 @@
             <table class="table table-striped">
                 <thead>
                     <tr>
+                        <th>#</th>
                         <th>Name</th>
                         <th>Team Responsible</th>
                         <th>Food Type</th>
@@ -59,6 +60,7 @@
                 <tbody>
                     @foreach($ngos as $ngo)
                     <tr>
+                        <td>{{ $loop->iteration }}</td>
                         <td>{{ $ngo->name }}</td>
                         <td>{{ $ngo->team_responsible }}</td>
                         <td>{{ $ngo->food_type }}</td>
