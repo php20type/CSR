@@ -1,5 +1,29 @@
 @extends('admin.layout')
 
+@section('style')
+<style>
+    .preview-container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 500px;
+        background: #f9f9f9;
+    }
+    .preview-container img {
+        max-width: 100%;
+        max-height: 80vh;
+        border-radius: 8px;
+        box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        object-fit: contain;
+    }
+    .preview-container iframe {
+        width: 1000px;
+        height: 80vh;
+        border: none;
+    }
+</style>
+@endsection
+
 @section('content')
 <div class="container mt-4">
     <h2 class="mb-4">All Bills</h2>
@@ -11,7 +35,7 @@
     @if($bills->isEmpty())
         <div class="alert alert-info">No bills available.</div>
     @else
-        <table class="table table-bordered table-striped">
+        <table class="table table-bordered table-striped align-middle">
             <thead class="table-dark">
                 <tr>
                     <th>#</th>
@@ -31,7 +55,8 @@
                         <td>${{ number_format($bill->amount, 2) }}</td>
                         <td>
                             @if($bill->bill_file)
-                                <button type="button" class="btn btn-sm btn-info" 
+                                <button type="button" 
+                                    class="btn btn-sm btn-info" 
                                     data-bs-toggle="modal" 
                                     data-bs-target="#previewModal" 
                                     data-file="{{ asset('storage/' . $bill->bill_file) }}">
@@ -54,37 +79,50 @@
             </tbody>
         </table>
     @endif
+
     <!-- Modal -->
     <div class="modal fade" id="previewModal" tabindex="-1" aria-labelledby="previewModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-lg">
+        <div class="modal-dialog modal-xl">
             <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="previewModalLabel">File Preview</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body text-center">
-                <iframe id="filePreview" src="" width="100%" height="500px" style="border:none;"></iframe>
-            </div>
+                <div class="modal-header">
+                    <h5 class="modal-title" id="previewModalLabel">File Preview</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body preview-container">
+                    <!-- Dynamic preview will be injected here -->
+                    <div id="previewContent"></div>
+                </div>
             </div>
         </div>
     </div>
 </div>
 @endsection
+
 @section('js')
 <script>
-    document.addEventListener("DOMContentLoaded", function() {
-        var previewModal = document.getElementById('previewModal');
-        var filePreview = document.getElementById('filePreview');
+document.addEventListener("DOMContentLoaded", function() {
+    var previewModal = document.getElementById('previewModal');
+    var previewContent = document.getElementById('previewContent');
 
-        previewModal.addEventListener('show.bs.modal', function (event) {
-            var button = event.relatedTarget;
-            var fileUrl = button.getAttribute('data-file');
-            filePreview.src = fileUrl;
-        });
+    previewModal.addEventListener('show.bs.modal', function (event) {
+        var button = event.relatedTarget;
+        var fileUrl = button.getAttribute('data-file');
+        var extension = fileUrl.split('.').pop().toLowerCase();
 
-        previewModal.addEventListener('hidden.bs.modal', function () {
-            filePreview.src = ""; // clear preview on close
-        });
+        previewContent.innerHTML = ''; // Clear previous
+
+        if(extension === 'pdf'){
+            previewContent.innerHTML = `<iframe src="${fileUrl}#zoom=100"></iframe>`;
+        } else if(['jpg','jpeg','png','gif','webp'].includes(extension)) {
+            previewContent.innerHTML = `<img src="${fileUrl}" alt="Bill Image" />`;
+        } else {
+            previewContent.innerHTML = `<p class="text-muted">File type not supported for preview. <a href="${fileUrl}" target="_blank">Download</a></p>`;
+        }
     });
+
+    previewModal.addEventListener('hidden.bs.modal', function () {
+        previewContent.innerHTML = '';
+    });
+});
 </script>
 @endsection
